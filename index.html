@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Water or Boat</title>
+  <title>Ghost Fleet Gamble</title>
   <style>
     :root {
       --sea: #1e3a5f;
       --sea-light: #2d5a87;
       --water-hit: #4a90c2;
       --boat: #c45c26;
-      --cell-size: min(12vw, 48px);
-      font-family: system-ui, Segoe UI, sans-serif;
+      --cell-size: min(7vw, 40px);
+      font-family: system-ui, "Segoe UI", sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -23,20 +23,40 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(180deg, #0d1b2a 0%, #1b263b 100%);
+      background-color: #0a1628;
+      background-image: url("GhostFleet_Gameplay.png");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
       color: #e8eef4;
     }
 
+    .game-ui {
+      margin: 1rem;
+      padding: 1rem 1.25rem 1.25rem;
+      max-width: calc(100vw - 2rem);
+      background: rgba(10, 22, 40, 0.82);
+      border: 1px solid rgba(125, 211, 252, 0.22);
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(8px);
+    }
+
     h1 {
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-weight: 600;
-      margin-bottom: 0.5rem;
+      margin: 0 0 0.5rem;
+      text-align: center;
+      letter-spacing: 0.04em;
+      color: #bae6fd;
+      text-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
     }
 
     .stats {
-      margin-bottom: 1rem;
-      font-size: 0.95rem;
-      opacity: 0.9;
+      margin-bottom: 0.85rem;
+      font-size: 0.92rem;
+      opacity: 0.95;
+      text-align: center;
     }
 
     .stats span { font-weight: 700; color: #7dd3fc; }
@@ -44,20 +64,19 @@
     #board {
       display: grid;
       gap: 4px;
-      padding: 12px;
-      background: rgba(0, 0, 0, 0.25);
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
     }
 
     .cell {
       width: var(--cell-size);
       height: var(--cell-size);
       border: none;
-      border-radius: 6px;
+      border-radius: 5px;
       cursor: pointer;
       background: var(--sea-light);
-      box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+      box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.25);
       transition: transform 0.08s ease, filter 0.15s ease;
     }
 
@@ -83,20 +102,22 @@
     }
 
     .footer {
-      margin-top: 1.25rem;
-      font-size: 0.85rem;
-      opacity: 0.65;
+      margin-top: 0.85rem;
+      font-size: 0.8rem;
+      opacity: 0.7;
+      text-align: center;
     }
 
     button#reset {
-      margin-top: 0.75rem;
-      padding: 0.5rem 1rem;
+      display: block;
+      margin: 0.75rem auto 0;
+      padding: 0.45rem 1rem;
       border: 1px solid rgba(255, 255, 255, 0.25);
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.08);
       color: inherit;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
 
     button#reset:hover {
@@ -105,15 +126,18 @@
   </style>
 </head>
 <body>
-  <h1>Water or boat?</h1>
-  <p class="stats">Boats found: <span id="found">0</span> / <span id="total">0</span></p>
-  <div id="board" role="grid" aria-label="Game board"></div>
-  <button type="button" id="reset">New game</button>
-  <p class="footer">Click a square to reveal it.</p>
+  <div class="game-ui">
+    <h1>Ghost Fleet Gamble</h1>
+    <p class="stats">Boats found: <span id="found">0</span> / <span id="total">0</span></p>
+    <div id="board" role="grid" aria-label="Game board"></div>
+    <button type="button" id="reset">New game</button>
+    <p class="footer">Click a square to reveal water or a boat.</p>
+  </div>
 
   <script>
-    const GRID = 8;
-    const BOAT_COUNT = 10;
+    const COLS = 10;
+    const ROWS = 6;
+    const BOAT_COUNT = 12;
 
     const boardEl = document.getElementById('board');
     const foundEl = document.getElementById('found');
@@ -133,9 +157,9 @@
 
     function buildGame() {
       boardEl.innerHTML = '';
-      boardEl.style.gridTemplateColumns = `repeat(${GRID}, var(--cell-size))`;
+      boardEl.style.gridTemplateColumns = `repeat(${COLS}, var(--cell-size))`;
 
-      const cells = GRID * GRID;
+      const cells = COLS * ROWS;
       const isBoat = new Array(cells).fill(false);
       const indices = shuffle([...Array(cells).keys()]);
       for (let i = 0; i < BOAT_COUNT; i++) isBoat[indices[i]] = true;
