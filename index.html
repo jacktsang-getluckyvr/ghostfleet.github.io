@@ -40,8 +40,8 @@
     }
 
     /*
-     * 9×6 click grid over GhostFleet_Gameplay.png (1536×1024).
-     * Box is fit to detected neon grid lines (~84×78 px per cell); tweak if your asset differs.
+     * GhostFleet_Gameplay.png (1536×1024). Main sea grid is 9×6; cell pitch matches
+     * ~84×78 px. Extra overlays share the same pitch (tweak --cell-px-* if needed).
      */
     :root {
       --img-w: 1536;
@@ -50,6 +50,19 @@
       --grid-px-top: 188;
       --grid-px-width: 756;
       --grid-px-height: 468;
+      --cell-px-w: 84;
+      --cell-px-h: 78;
+      /* 3×4 under pirate: main cols 0–2, rows 2–5 (0-based) */
+      --pirate3x4-left: 317;
+      --pirate3x4-top: 344;
+      /* Two rows above the 5×5 block: main cols 4–8, rows 0–1 */
+      --bridge-rows-top: 188;
+      --bridge-rows-left: 653;
+      --bridge-cols: 5;
+      /* One column right of that 5×5: col 9, rows 1–5 (0-based) */
+      --extra-col-left: 1073;
+      --extra-col-top: 266;
+      --extra-col-rows: 5;
     }
 
     .stage {
@@ -66,17 +79,53 @@
       user-select: none;
     }
 
-    #board {
+    .board-layer {
       position: absolute;
+      display: grid;
+      gap: 0;
+    }
+
+    #board {
+      z-index: 1;
       left: calc(var(--grid-px-left) * 100% / var(--img-w));
       top: calc(var(--grid-px-top) * 100% / var(--img-h));
       width: calc(var(--grid-px-width) * 100% / var(--img-w));
       height: calc(var(--grid-px-height) * 100% / var(--img-h));
-      z-index: 1;
-      display: grid;
       grid-template-columns: repeat(9, 1fr);
       grid-template-rows: repeat(6, 1fr);
-      gap: 0;
+    }
+
+    /* 3×4 under pirate — sits above main cells (z-index); syncs reveal to #board */
+    #board-pirate-under {
+      z-index: 2;
+      left: calc(var(--pirate3x4-left) * 100% / var(--img-w));
+      top: calc(var(--pirate3x4-top) * 100% / var(--img-h));
+      width: calc(3 * var(--cell-px-w) * 100% / var(--img-w));
+      height: calc(4 * var(--cell-px-h) * 100% / var(--img-h));
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+    }
+
+    /* Two rows directly above the 5×5 (cols 4–8, rows 0–1) */
+    #board-bridge-rows {
+      z-index: 2;
+      left: calc(var(--bridge-rows-left) * 100% / var(--img-w));
+      top: calc(var(--bridge-rows-top) * 100% / var(--img-h));
+      width: calc(var(--bridge-cols) * var(--cell-px-w) * 100% / var(--img-w));
+      height: calc(2 * var(--cell-px-h) * 100% / var(--img-h));
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+    }
+
+    /* Tenth column to the right of the 5×5 block */
+    #board-extra-col {
+      z-index: 2;
+      left: calc(var(--extra-col-left) * 100% / var(--img-w));
+      top: calc(var(--extra-col-top) * 100% / var(--img-h));
+      width: calc(var(--cell-px-w) * 100% / var(--img-w));
+      height: calc(var(--extra-col-rows) * var(--cell-px-h) * 100% / var(--img-h));
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(5, 1fr);
     }
 
     .cell {
@@ -124,33 +173,111 @@
       height="1024"
       alt="Ghost Fleet Gamble"
     >
-    <div id="board" role="grid" aria-label="Sea grid" aria-rowcount="6" aria-colcount="9"></div>
+    <div id="board" class="board-layer" role="grid" aria-label="Sea grid" aria-rowcount="6" aria-colcount="9"></div>
+    <div id="board-pirate-under" class="board-layer" role="grid" aria-label="Under pirate" aria-hidden="true"></div>
+    <div id="board-bridge-rows" class="board-layer" role="grid" aria-label="Bridge rows" aria-hidden="true"></div>
+    <div id="board-extra-col" class="board-layer" role="grid" aria-label="Right column" aria-hidden="true"></div>
   </div>
 
-  <p class="hint">Click a square to uncover it (black). Use Clear grid to play again.</p>
+  <p class="hint">Click any sea square to uncover it (black), including under the pirate, the two rows above the right-hand 5×5 block, and the extra column past it. Clear grid resets all.</p>
 
   <script>
     const COLS = 9;
     const ROWS = 6;
 
     const boardEl = document.getElementById('board');
+    const pirateUnderEl = document.getElementById('board-pirate-under');
+    const bridgeRowsEl = document.getElementById('board-bridge-rows');
+    const extraColEl = document.getElementById('board-extra-col');
     const resetBtn = document.getElementById('reset');
 
+    function mainIndex(row, col) {
+      return row * COLS + col;
+    }
+
+    /** Main cells covered by pirate 3×4 or bridge 5×2 — base layer ignores pointer */
+    function overlappedMainIndices() {
+      const set = new Set();
+      for (let r = 2; r <= 5; r++) {
+        for (let c = 0; c <= 2; c++) set.add(mainIndex(r, c));
+      }
+      for (let r = 0; r <= 1; r++) {
+        for (let c = 4; c <= 8; c++) set.add(mainIndex(r, c));
+      }
+      return set;
+    }
+
+    function wireCell(btn) {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        btn.classList.add('revealed');
+        btn.disabled = true;
+        btn.setAttribute('aria-label', 'Uncovered');
+      });
+    }
+
+    /** Overlay click also blacks out the matching #board cell (same square). */
+    function wireOverlayCell(btn, mainIdx) {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        btn.classList.add('revealed');
+        btn.disabled = true;
+        btn.setAttribute('aria-label', 'Uncovered');
+        const mainBtn = boardEl.children[mainIdx];
+        if (mainBtn && !mainBtn.disabled) {
+          mainBtn.classList.add('revealed');
+          mainBtn.disabled = true;
+          mainBtn.setAttribute('aria-label', 'Uncovered');
+        }
+      });
+    }
+
     function buildGrid() {
+      const overlap = overlappedMainIndices();
+
       boardEl.innerHTML = '';
-      const total = COLS * ROWS;
-      for (let i = 0; i < total; i++) {
+      for (let i = 0; i < COLS * ROWS; i++) {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'cell';
         btn.setAttribute('aria-label', 'Hidden square');
-        btn.addEventListener('click', () => {
-          if (btn.disabled) return;
-          btn.classList.add('revealed');
-          btn.disabled = true;
-          btn.setAttribute('aria-label', 'Uncovered');
-        });
+        if (overlap.has(i)) btn.style.pointerEvents = 'none';
+        wireCell(btn);
         boardEl.appendChild(btn);
+      }
+
+      pirateUnderEl.innerHTML = '';
+      for (let i = 0; i < 12; i++) {
+        const r = Math.floor(i / 3);
+        const c = i % 3;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'cell';
+        btn.setAttribute('aria-label', 'Hidden square');
+        wireOverlayCell(btn, mainIndex(r + 2, c));
+        pirateUnderEl.appendChild(btn);
+      }
+
+      bridgeRowsEl.innerHTML = '';
+      for (let i = 0; i < 10; i++) {
+        const r = Math.floor(i / 5);
+        const c = i % 5;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'cell';
+        btn.setAttribute('aria-label', 'Hidden square');
+        wireOverlayCell(btn, mainIndex(r, c + 4));
+        bridgeRowsEl.appendChild(btn);
+      }
+
+      extraColEl.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'cell';
+        btn.setAttribute('aria-label', 'Hidden square');
+        wireCell(btn);
+        extraColEl.appendChild(btn);
       }
     }
 
