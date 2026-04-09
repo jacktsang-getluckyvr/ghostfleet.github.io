@@ -84,53 +84,63 @@
       user-select: none;
     }
 
+    /*
+     * Let clicks hit the actual buttons only. Otherwise a tall overlay div can sit
+     * above #board (same z-stacking) and swallow events in “empty” areas — often the
+     * bottom rows if width/height calcs mis-resolve.
+     */
     .board-layer {
       position: absolute;
       display: grid;
       gap: 0;
+      pointer-events: none;
+    }
+
+    .board-layer .cell {
+      pointer-events: auto;
     }
 
     #board {
       z-index: 1;
-      left: calc(var(--grid-px-left) * 100% / var(--img-w));
-      top: calc(var(--grid-px-top) * 100% / var(--img-h));
-      width: calc(var(--grid-px-width) * 100% / var(--img-w));
-      height: calc(var(--grid-px-height) * 100% / var(--img-h));
+      left: calc(100% * var(--grid-px-left) / var(--img-w));
+      top: calc(100% * var(--grid-px-top) / var(--img-h));
+      width: calc(100% * var(--grid-px-width) / var(--img-w));
+      height: calc(100% * var(--grid-px-height) / var(--img-h));
       grid-template-columns: repeat(9, 1fr);
-      grid-template-rows: repeat(6, 1fr);
+      grid-template-rows: repeat(6, minmax(0, 1fr));
     }
 
     /* 3×4 under pirate — sits above main cells (z-index); syncs reveal to #board */
     #board-pirate-under {
       z-index: 2;
-      left: calc(var(--pirate3x4-left) * 100% / var(--img-w));
-      top: calc(var(--pirate3x4-top) * 100% / var(--img-h));
-      width: calc(3 * var(--cell-px-w) * 100% / var(--img-w));
-      height: calc(4 * var(--cell-px-h) * 100% / var(--img-h));
+      left: calc(100% * var(--pirate3x4-left) / var(--img-w));
+      top: calc(100% * var(--pirate3x4-top) / var(--img-h));
+      width: calc(100% * 252 / var(--img-w));
+      height: calc(100% * 312 / var(--img-h));
       grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(4, 1fr);
+      grid-template-rows: repeat(4, minmax(0, 1fr));
     }
 
     /* Two rows directly above the 5×5 (cols 4–8, rows 0–1) */
     #board-bridge-rows {
       z-index: 2;
-      left: calc(var(--bridge-rows-left) * 100% / var(--img-w));
-      top: calc(var(--bridge-rows-top) * 100% / var(--img-h));
-      width: calc(var(--bridge-cols) * var(--cell-px-w) * 100% / var(--img-w));
-      height: calc(2 * var(--cell-px-h) * 100% / var(--img-h));
+      left: calc(100% * var(--bridge-rows-left) / var(--img-w));
+      top: calc(100% * var(--bridge-rows-top) / var(--img-h));
+      width: calc(100% * 420 / var(--img-w));
+      height: calc(100% * 156 / var(--img-h));
       grid-template-columns: repeat(5, 1fr);
-      grid-template-rows: repeat(2, 1fr);
+      grid-template-rows: repeat(2, minmax(0, 1fr));
     }
 
     /* Tenth column to the right of the 5×5 block */
     #board-extra-col {
       z-index: 2;
-      left: calc(var(--extra-col-left) * 100% / var(--img-w));
-      top: calc(var(--extra-col-top) * 100% / var(--img-h));
-      width: calc(var(--cell-px-w) * 100% / var(--img-w));
-      height: calc(var(--extra-col-rows) * var(--cell-px-h) * 100% / var(--img-h));
+      left: calc(100% * var(--extra-col-left) / var(--img-w));
+      top: calc(100% * var(--extra-col-top) / var(--img-h));
+      width: calc(100% * 84 / var(--img-w));
+      height: calc(100% * 390 / var(--img-h));
       grid-template-columns: 1fr;
-      grid-template-rows: repeat(5, 1fr);
+      grid-template-rows: repeat(5, minmax(0, 1fr));
     }
 
     .cell {
