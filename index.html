@@ -3,9 +3,177 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image</title>
+  <title>Water or Boat</title>
+  <style>
+    :root {
+      --sea: #1e3a5f;
+      --sea-light: #2d5a87;
+      --water-hit: #4a90c2;
+      --boat: #c45c26;
+      --cell-size: min(12vw, 48px);
+      font-family: system-ui, Segoe UI, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #0d1b2a 0%, #1b263b 100%);
+      color: #e8eef4;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .stats {
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .stats span { font-weight: 700; color: #7dd3fc; }
+
+    #board {
+      display: grid;
+      gap: 4px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .cell {
+      width: var(--cell-size);
+      height: var(--cell-size);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: var(--sea-light);
+      box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+      transition: transform 0.08s ease, filter 0.15s ease;
+    }
+
+    .cell:hover:not(:disabled) {
+      filter: brightness(1.12);
+      transform: scale(1.02);
+    }
+
+    .cell:disabled {
+      cursor: default;
+    }
+
+    .cell.reveal-water {
+      background: var(--water-hit);
+      box-shadow: none;
+    }
+
+    .cell.reveal-boat {
+      background: var(--boat);
+      box-shadow: none;
+      font-size: calc(var(--cell-size) * 0.45);
+      line-height: 1;
+    }
+
+    .footer {
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
+      opacity: 0.65;
+    }
+
+    button#reset {
+      margin-top: 0.75rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: inherit;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    button#reset:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  </style>
 </head>
 <body>
-  <img src="GhostFleet_Gameplay.png" alt="">
+  <h1>Water or boat?</h1>
+  <p class="stats">Boats found: <span id="found">0</span> / <span id="total">0</span></p>
+  <div id="board" role="grid" aria-label="Game board"></div>
+  <button type="button" id="reset">New game</button>
+  <p class="footer">Click a square to reveal it.</p>
+
+  <script>
+    const GRID = 8;
+    const BOAT_COUNT = 10;
+
+    const boardEl = document.getElementById('board');
+    const foundEl = document.getElementById('found');
+    const totalEl = document.getElementById('total');
+    const resetBtn = document.getElementById('reset');
+
+    let boatsFound = 0;
+    let boatTotal = BOAT_COUNT;
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function buildGame() {
+      boardEl.innerHTML = '';
+      boardEl.style.gridTemplateColumns = `repeat(${GRID}, var(--cell-size))`;
+
+      const cells = GRID * GRID;
+      const isBoat = new Array(cells).fill(false);
+      const indices = shuffle([...Array(cells).keys()]);
+      for (let i = 0; i < BOAT_COUNT; i++) isBoat[indices[i]] = true;
+
+      boatsFound = 0;
+      boatTotal = BOAT_COUNT;
+      foundEl.textContent = '0';
+      totalEl.textContent = String(boatTotal);
+
+      for (let i = 0; i < cells; i++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'cell';
+        btn.dataset.index = String(i);
+        btn.setAttribute('aria-label', 'Hidden square');
+        btn.addEventListener('click', () => reveal(btn, isBoat[i]));
+        boardEl.appendChild(btn);
+      }
+    }
+
+    function reveal(btn, hasBoat) {
+      if (btn.disabled) return;
+      btn.disabled = true;
+
+      if (hasBoat) {
+        btn.classList.add('reveal-boat');
+        btn.textContent = '\u{1F6A2}';
+        btn.setAttribute('aria-label', 'Boat');
+        boatsFound++;
+        foundEl.textContent = String(boatsFound);
+      } else {
+        btn.classList.add('reveal-water');
+        btn.setAttribute('aria-label', 'Water');
+      }
+    }
+
+    resetBtn.addEventListener('click', buildGame);
+    buildGame();
+  </script>
 </body>
 </html>
