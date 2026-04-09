@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ghost Fleet Gamble</title>
+  <title>Ghost Fleet Gamble v1</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -40,8 +40,8 @@
     }
 
     /*
-     * GhostFleet_Gameplay.png (1536×1024). Main sea grid is 9×6; cell pitch matches
-     * ~84×78 px. Extra overlays share the same pitch (tweak --cell-px-* if needed).
+     * GhostFleet_Gameplay.png 1536×1024. Main grid 9×6; 10th column is separate.
+     * Pixel refs use literal /1536 and /1024 so % layout matches the bitmap.
      */
     :root {
       --img-w: 1536;
@@ -50,28 +50,17 @@
       --grid-px-top: 188;
       --grid-px-width: 756;
       --grid-px-height: 468;
-      --cell-px-w: 84;
-      --cell-px-h: 78;
-      /* 3×4 under pirate: main cols 0–2, rows 2–5 (0-based) */
-      --pirate3x4-left: 317;
-      --pirate3x4-top: 344;
-      /* Two rows above the 5×5 block: main cols 4–8, rows 0–1 */
-      --bridge-rows-top: 188;
-      --bridge-rows-left: 653;
-      --bridge-cols: 5;
-      /* One column right of that 5×5: col 9, rows 1–5 (0-based) */
       --extra-col-left: 1073;
       --extra-col-top: 266;
-      --extra-col-rows: 5;
     }
 
     .stage {
       position: relative;
       display: block;
       width: min(96vw, 960px);
-      /* Lock height to image aspect so % top/height on boards match the bitmap */
       aspect-ratio: 1536 / 1024;
       line-height: 0;
+      isolation: isolate;
     }
     .stage img {
       position: absolute;
@@ -82,68 +71,48 @@
       object-fit: fill;
       pointer-events: none;
       user-select: none;
+      z-index: 0;
     }
 
-    /*
-     * Let clicks hit the actual buttons only. Otherwise a tall overlay div can sit
-     * above #board (same z-stacking) and swallow events in “empty” areas — often the
-     * bottom rows if width/height calcs mis-resolve.
-     */
+    /* Wrapper ignores events; only .cell buttons receive clicks */
     .board-layer {
       position: absolute;
       display: grid;
       gap: 0;
       pointer-events: none;
     }
-
     .board-layer .cell {
       pointer-events: auto;
     }
 
+    /*
+     * Pin top + bottom (not height) so the hit area always matches the art:
+     * bottom inset = 1024 - 188 - 468 = 368
+     */
     #board {
-      z-index: 1;
-      left: calc(100% * var(--grid-px-left) / var(--img-w));
-      top: calc(100% * var(--grid-px-top) / var(--img-h));
-      width: calc(100% * var(--grid-px-width) / var(--img-w));
-      height: calc(100% * var(--grid-px-height) / var(--img-h));
+      z-index: 2;
+      left: calc(100% * 317 / 1536);
+      top: calc(100% * 188 / 1024);
+      width: calc(100% * 756 / 1536);
+      bottom: calc(100% * 368 / 1024);
       grid-template-columns: repeat(9, 1fr);
       grid-template-rows: repeat(6, minmax(0, 1fr));
     }
 
-    /* 3×4 under pirate — sits above main cells (z-index); syncs reveal to #board */
-    #board-pirate-under {
-      z-index: 2;
-      left: calc(100% * var(--pirate3x4-left) / var(--img-w));
-      top: calc(100% * var(--pirate3x4-top) / var(--img-h));
-      width: calc(100% * 252 / var(--img-w));
-      height: calc(100% * 312 / var(--img-h));
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(4, minmax(0, 1fr));
-    }
-
-    /* Two rows directly above the 5×5 (cols 4–8, rows 0–1) */
-    #board-bridge-rows {
-      z-index: 2;
-      left: calc(100% * var(--bridge-rows-left) / var(--img-w));
-      top: calc(100% * var(--bridge-rows-top) / var(--img-h));
-      width: calc(100% * 420 / var(--img-w));
-      height: calc(100% * 156 / var(--img-h));
-      grid-template-columns: repeat(5, 1fr);
-      grid-template-rows: repeat(2, minmax(0, 1fr));
-    }
-
-    /* Tenth column to the right of the 5×5 block */
+    /* Tenth column — below main board so it cannot steal hits from the 9×6 grid */
     #board-extra-col {
-      z-index: 2;
-      left: calc(100% * var(--extra-col-left) / var(--img-w));
-      top: calc(100% * var(--extra-col-top) / var(--img-h));
-      width: calc(100% * 84 / var(--img-w));
-      height: calc(100% * 390 / var(--img-h));
+      z-index: 1;
+      left: calc(100% * 1073 / 1536);
+      top: calc(100% * 266 / 1024);
+      width: calc(100% * 84 / 1536);
+      height: calc(100% * 390 / 1024);
       grid-template-columns: 1fr;
       grid-template-rows: repeat(5, minmax(0, 1fr));
     }
 
     .cell {
+      position: relative;
+      z-index: 0;
       min-width: 0;
       min-height: 0;
       border: none;
@@ -161,7 +130,6 @@
       cursor: default;
     }
     .cell.revealed {
-      /* Opaque black tile — hides that square of the artwork (fog-of-war) */
       background: #000000;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
     }
@@ -189,26 +157,18 @@
       alt="Ghost Fleet Gamble"
     >
     <div id="board" class="board-layer" role="grid" aria-label="Sea grid" aria-rowcount="6" aria-colcount="9"></div>
-    <div id="board-pirate-under" class="board-layer" role="grid" aria-label="Under pirate" aria-hidden="true"></div>
-    <div id="board-bridge-rows" class="board-layer" role="grid" aria-label="Bridge rows" aria-hidden="true"></div>
-    <div id="board-extra-col" class="board-layer" role="grid" aria-label="Right column" aria-hidden="true"></div>
+    <div id="board-extra-col" class="board-layer" role="grid" aria-label="Extra column"></div>
   </div>
 
-  <p class="hint">Click any sea square to uncover it (black), including under the pirate, the two rows above the right-hand 5×5 block, and the extra column past it. Clear grid resets all.</p>
+  <p class="hint">Click any sea square to uncover it (black), including the extra column on the right. Clear grid resets all.</p>
 
   <script>
     const COLS = 9;
     const ROWS = 6;
 
     const boardEl = document.getElementById('board');
-    const pirateUnderEl = document.getElementById('board-pirate-under');
-    const bridgeRowsEl = document.getElementById('board-bridge-rows');
     const extraColEl = document.getElementById('board-extra-col');
     const resetBtn = document.getElementById('reset');
-
-    function mainIndex(row, col) {
-      return row * COLS + col;
-    }
 
     function wireCell(btn) {
       btn.addEventListener('click', () => {
@@ -216,22 +176,6 @@
         btn.classList.add('revealed');
         btn.disabled = true;
         btn.setAttribute('aria-label', 'Uncovered');
-      });
-    }
-
-    /** Overlay click also blacks out the matching #board cell (same square). */
-    function wireOverlayCell(btn, mainIdx) {
-      btn.addEventListener('click', () => {
-        if (btn.disabled) return;
-        btn.classList.add('revealed');
-        btn.disabled = true;
-        btn.setAttribute('aria-label', 'Uncovered');
-        const mainBtn = boardEl.children[mainIdx];
-        if (mainBtn && !mainBtn.disabled) {
-          mainBtn.classList.add('revealed');
-          mainBtn.disabled = true;
-          mainBtn.setAttribute('aria-label', 'Uncovered');
-        }
       });
     }
 
@@ -244,30 +188,6 @@
         btn.setAttribute('aria-label', 'Hidden square');
         wireCell(btn);
         boardEl.appendChild(btn);
-      }
-
-      pirateUnderEl.innerHTML = '';
-      for (let i = 0; i < 12; i++) {
-        const r = Math.floor(i / 3);
-        const c = i % 3;
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'cell';
-        btn.setAttribute('aria-label', 'Hidden square');
-        wireOverlayCell(btn, mainIndex(r + 2, c));
-        pirateUnderEl.appendChild(btn);
-      }
-
-      bridgeRowsEl.innerHTML = '';
-      for (let i = 0; i < 10; i++) {
-        const r = Math.floor(i / 5);
-        const c = i % 5;
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'cell';
-        btn.setAttribute('aria-label', 'Hidden square');
-        wireOverlayCell(btn, mainIndex(r, c + 4));
-        bridgeRowsEl.appendChild(btn);
       }
 
       extraColEl.innerHTML = '';
