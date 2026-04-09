@@ -7,11 +7,17 @@
   <style>
     :root {
       font-family: system-ui, "Segoe UI", sans-serif;
-      /* Align overlay to the painted grid in GhostFleet_Gameplay.png (1536×1024). Tweak if needed. */
-      --grid-left: 33.6%;
-      --grid-top: 37.8%;
-      --grid-width: 31.6%;
-      --grid-height: 24.8%;
+      /*
+        Click grid aligned to the sea tiles in GhostFleet_Gameplay.png (1536×1024).
+        Box is pixel-calibrated so each 9×6 cell lines up with the art; uses % of the
+        rendered image via calc() so scaling stays locked.
+      */
+      --img-w: 1536;
+      --img-h: 1024;
+      --grid-px-left: 404;
+      --grid-px-top: 308;
+      --grid-px-width: 550;
+      --grid-px-height: 228;
     }
 
     * { box-sizing: border-box; }
@@ -85,10 +91,10 @@
 
     #board {
       position: absolute;
-      left: var(--grid-left);
-      top: var(--grid-top);
-      width: var(--grid-width);
-      height: var(--grid-height);
+      left: calc(var(--grid-px-left) * 100% / var(--img-w));
+      top: calc(var(--grid-px-top) * 100% / var(--img-h));
+      width: calc(var(--grid-px-width) * 100% / var(--img-w));
+      height: calc(var(--grid-px-height) * 100% / var(--img-h));
       z-index: 1;
       display: grid;
       grid-template-columns: repeat(9, 1fr);
@@ -159,7 +165,7 @@
     <div id="board" role="grid" aria-label="Sea grid"></div>
   </div>
 
-  <p class="hint">Click the squares on the board in the artwork. If the overlay looks misaligned, adjust the CSS variables <code>--grid-left</code>, <code>--grid-top</code>, <code>--grid-width</code>, and <code>--grid-height</code> in <code>index.html</code>.</p>
+  <p class="hint">Click the sea tiles on the board. The hit area is matched to this PNG’s 9×6 grid (see <code>--grid-px-*</code> in CSS if you swap art).</p>
 
   <script>
     const COLS = 9;
