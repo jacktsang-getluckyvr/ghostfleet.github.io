@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<!--
+  Artwork: keep a copy of
+  D:\Important4\ghostfleet\GhostFleet_Gameplay.png
+  next to this file as GhostFleet_Gameplay.png (web pages cannot load D:\ paths).
+-->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -8,12 +13,14 @@
     :root {
       font-family: system-ui, "Segoe UI", sans-serif;
       /*
-        Click grid aligned to the sea tiles in GhostFleet_Gameplay.png (1536×1024).
-        Box is pixel-calibrated so each 9×6 cell lines up with the art; uses % of the
-        rendered image via calc() so scaling stays locked.
+        GhostFleet_Gameplay.png (1536×1024) from D:\Important4\ghostfleet\
+        Click overlay matches the painted sea grid: 9 columns × 6 rows.
+        Pixel box calibrated to cell centers; scales with the image via calc().
       */
       --img-w: 1536;
       --img-h: 1024;
+      --grid-cols: 9;
+      --grid-rows: 6;
       --grid-px-left: 404;
       --grid-px-top: 308;
       --grid-px-width: 550;
@@ -97,8 +104,8 @@
       height: calc(var(--grid-px-height) * 100% / var(--img-h));
       z-index: 1;
       display: grid;
-      grid-template-columns: repeat(9, 1fr);
-      grid-template-rows: repeat(6, 1fr);
+      grid-template-columns: repeat(var(--grid-cols), 1fr);
+      grid-template-rows: repeat(var(--grid-rows), 1fr);
       gap: 0;
     }
 
@@ -156,6 +163,7 @@
   </header>
 
   <div class="stage">
+    <!-- Same asset as D:\Important4\ghostfleet\GhostFleet_Gameplay.png -->
     <img
       src="GhostFleet_Gameplay.png"
       width="1536"
@@ -165,11 +173,12 @@
     <div id="board" role="grid" aria-label="Sea grid"></div>
   </div>
 
-  <p class="hint">Click the sea tiles on the board. The hit area is matched to this PNG’s 9×6 grid (see <code>--grid-px-*</code> in CSS if you swap art).</p>
+  <p class="hint">Click the sea tiles on the board. Overlay matches <code>GhostFleet_Gameplay.png</code> (9×6); adjust <code>--grid-px-*</code> / <code>--img-w</code> / <code>--img-h</code> if the file changes size.</p>
 
   <script>
-    const COLS = 9;
-    const ROWS = 6;
+    const rootStyle = getComputedStyle(document.documentElement);
+    const COLS = Number(rootStyle.getPropertyValue('--grid-cols').trim()) || 9;
+    const ROWS = Number(rootStyle.getPropertyValue('--grid-rows').trim()) || 6;
     const BOAT_COUNT = 12;
 
     const boardEl = document.getElementById('board');
