@@ -285,29 +285,36 @@
 
 .unrevealed-cell {
   background:
-    radial-gradient(circle at 30% 30%, rgba(20, 40, 80, 0.45) 0%, transparent 50%),
-    radial-gradient(circle at 70% 70%, rgba(15, 30, 70, 0.3) 0%, transparent 50%),
-    linear-gradient(145deg, rgba(14, 26, 58, 0.55), rgba(10, 18, 48, 0.5));
+    radial-gradient(circle at 30% 30%, rgba(20, 40, 80, 0.35) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(15, 30, 70, 0.22) 0%, transparent 50%),
+    linear-gradient(145deg, rgba(14, 26, 58, 0.2), rgba(10, 18, 48, 0.28)),
+    url('/grid-cell-tile.png');
+  background-size: auto, auto, auto, cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border: 1px solid rgba(42, 100, 200, 0.28);
   cursor: pointer;
 }
 
 .unrevealed-cell:hover {
   background:
-    radial-gradient(circle at 30% 30%, rgba(30, 55, 110, 0.55) 0%, transparent 50%),
-    radial-gradient(circle at 70% 70%, rgba(20, 40, 90, 0.35) 0%, transparent 50%),
-    linear-gradient(145deg, rgba(22, 42, 90, 0.65), rgba(18, 32, 68, 0.6));
+    radial-gradient(circle at 30% 30%, rgba(30, 55, 110, 0.45) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(20, 40, 90, 0.28) 0%, transparent 50%),
+    linear-gradient(145deg, rgba(22, 42, 90, 0.35), rgba(18, 32, 68, 0.42)),
+    url('/grid-cell-tile.png');
+  background-size: auto, auto, auto, cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-color: var(--accent-blue);
   box-shadow: 0 0 12px rgba(0, 191, 255, 0.25);
-  filter: brightness(1.12);
+  filter: brightness(1.08);
 }
 
 .cell-water {
   width: 100%;
   height: 100%;
-  background:
-    radial-gradient(circle at 30% 40%, rgba(0, 100, 200, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 70% 60%, rgba(0, 50, 150, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  background: transparent;
 }
 
 .revealed-cell {
