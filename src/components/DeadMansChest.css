@@ -1,0 +1,123 @@
+.dmc-panel {
+  width: 400px;
+  max-width: 90vw;
+  background: linear-gradient(180deg, #0a1538, #060a1a);
+  border: 2px solid var(--accent-gold);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow:
+    0 0 30px rgba(240, 192, 64, 0.2),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  animation: slide-up 0.3s ease;
+}
+
+.dmc-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.dmc-icon {
+  font-size: 32px;
+}
+
+.dmc-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--accent-gold);
+  letter-spacing: 2px;
+}
+
+.dmc-desc {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.dmc-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  margin-bottom: 16px;
+}
+
+.dmc-cell {
+  aspect-ratio: 1;
+  background: rgba(17, 29, 66, 0.8);
+  border: 1px solid var(--border-blue);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.dmc-cell:hover:not(.dmc-cell-disabled) {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 8px rgba(240, 192, 64, 0.2);
+}
+
+.dmc-cell-selected {
+  border-color: var(--accent-gold) !important;
+  background: rgba(240, 192, 64, 0.15) !important;
+  box-shadow: 0 0 12px rgba(240, 192, 64, 0.3) !important;
+}
+
+.dmc-cell-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.dmc-check {
+  color: var(--accent-gold);
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.dmc-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.dmc-cancel {
+  padding: 10px 24px;
+  border-radius: 8px;
+  background: rgba(13, 23, 53, 0.8);
+  border: 1px solid var(--border-blue);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.dmc-cancel:hover {
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
+}
+
+.dmc-confirm {
+  padding: 10px 24px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #8a6a00, #c09000);
+  border: 1px solid var(--accent-gold);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.dmc-confirm:hover:not(:disabled) {
+  box-shadow: 0 0 16px rgba(240, 192, 64, 0.4);
+  transform: translateY(-1px);
+}
+
+.dmc-confirm:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

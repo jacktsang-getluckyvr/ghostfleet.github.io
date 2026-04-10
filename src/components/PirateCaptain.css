@@ -1,0 +1,12 @@
+.captain-container {
+  width: 170px;
+  height: 200px;
+  position: relative;
+  animation: float 5s ease-in-out infinite;
+}
+
+.captain-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 15px rgba(0, 100, 255, 0.25));
+}
