@@ -210,8 +210,6 @@
 .game-board-shell {
   /* Fixed layout width: image + overlay share one box (source art 1536×1024) */
   --board-display-width: min(960px, 100%);
-  /* Crops painted bottom HUD (BET/WIN/mult/CASH OUT) so .bottom-panel--on-board replaces it; keep in sync with panel position */
-  --board-hud-crop-bottom: 31%;
   /* Painted playfield is 10×7 (see GhostFleet_Gameplay_NoHead.png). Tune --grid-* only. */
   --grid-inset-top: 17.5%;
   --grid-width-pct: 54%;
@@ -230,13 +228,13 @@
   height: auto;
   pointer-events: none;
   user-select: none;
-  clip-path: inset(3.5% 0 var(--board-hud-crop-bottom) 0);
+  /* Hide painted header/footer chrome; interactive UI stays in React */
+  clip-path: inset(3.5% 0 21% 0);
 }
 
 /* Centers the hit grid on the art; keeps shake animation off the centering transform */
 .game-board-aligner {
   position: absolute;
-  z-index: 4;
   left: calc(50% + var(--grid-nudge-x));
   top: var(--grid-inset-top);
   margin-top: calc(var(--grid-row-offset, 0) * var(--grid-width-pct) / 10);
@@ -444,22 +442,6 @@
   backdrop-filter: blur(6px);
 }
 
-.bottom-panel--on-board {
-  position: absolute;
-  left: 50%;
-  bottom: var(--board-hud-crop-bottom);
-  transform: translateX(-50%);
-  z-index: 5;
-  width: min(94%, 920px);
-  margin: 0;
-  pointer-events: auto;
-  background: rgba(4, 10, 28, 0.88);
-  border: 1px solid rgba(60, 140, 220, 0.45);
-  box-shadow:
-    0 0 18px rgba(0, 60, 140, 0.35),
-    inset 0 1px 0 rgba(120, 200, 255, 0.12);
-}
-
 .panel-stat {
   text-align: center;
   padding: 8px 16px;
@@ -508,29 +490,18 @@
 }
 
 .cashout-btn {
-  padding: 10px 24px 12px;
-  min-width: 148px;
-  background:
-    radial-gradient(ellipse 120% 80% at 50% 0%, rgba(30, 70, 140, 0.55), transparent 55%),
-    linear-gradient(180deg, rgba(12, 28, 72, 0.98), rgba(4, 12, 38, 0.99));
-  border: 2px solid rgba(64, 200, 255, 0.85);
-  border-radius: 10px;
+  padding: 10px 28px;
+  background: linear-gradient(135deg, #0a1a50, #1a3aaa, #2a4acc);
+  border: 2px solid rgba(0, 160, 255, 0.5);
+  border-radius: 8px;
   text-align: center;
   transition: all 0.2s;
   margin-left: auto;
-  box-shadow:
-    0 0 14px rgba(0, 191, 255, 0.35),
-    inset 0 0 12px rgba(0, 80, 160, 0.2);
 }
 
 .cashout-btn:hover:not(:disabled) {
-  background:
-    radial-gradient(ellipse 120% 80% at 50% 0%, rgba(40, 90, 180, 0.65), transparent 55%),
-    linear-gradient(180deg, rgba(18, 38, 92, 0.99), rgba(8, 20, 55, 0.99));
-  border-color: rgba(100, 220, 255, 0.95);
-  box-shadow:
-    0 0 22px rgba(0, 191, 255, 0.5),
-    inset 0 0 14px rgba(0, 100, 200, 0.25);
+  background: linear-gradient(135deg, #0e2060, #2244cc, #3355ff);
+  box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
   transform: translateY(-1px);
 }
 
@@ -549,10 +520,8 @@
 
 .cashout-amount {
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: rgba(180, 230, 255, 0.92);
-  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
 }
 
 /* RIGHT SIDE */
