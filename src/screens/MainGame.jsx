@@ -126,7 +126,7 @@ export default function MainGame({ bet, onGameOver, onCashOut, onExit, isNightTi
     setTimeout(() => {
       setCannonballAnim(false)
       const cellEl = document.querySelector(
-        `.game-board > div:nth-child(${target.index + 1})`
+        `[data-cell-index="${target.index}"]`
       )
       if (cellEl) cellEl.click()
     }, 1200)
@@ -764,14 +764,22 @@ export default function MainGame({ bet, onGameOver, onCashOut, onExit, isNightTi
           </span>
         </div>
 
-        <div
-          ref={boardRef}
-          className={`game-board ${shakeBoard ? 'board-shake' : ''} ${chaosAnim ? 'board-chaos' : ''}`}
-        >
+        <div className="game-board-shell">
+          <img
+            className="game-board-bg-img"
+            src="/GhostFleet_Gameplay_NoHead.png"
+            alt=""
+            draggable={false}
+          />
+          <div
+            ref={boardRef}
+            className={`game-board ${shakeBoard ? 'board-shake' : ''} ${chaosAnim ? 'board-chaos' : ''}`}
+          >
           {sonarWave && <div className="sonar-wave-overlay" />}
           {board.cells.map((cell, idx) => (
             <BoardCell
               key={idx}
+              cellIndex={idx}
               cell={cell}
               onClick={() => revealCell(idx)}
               isExplosion={explosionCells.includes(idx)}
@@ -782,6 +790,7 @@ export default function MainGame({ bet, onGameOver, onCashOut, onExit, isNightTi
               cannonballTarget={cannonballAnim && cannonballTarget === idx}
             />
           ))}
+          </div>
         </div>
 
         {/* Bottom Panel */}
@@ -902,6 +911,7 @@ export default function MainGame({ bet, onGameOver, onCashOut, onExit, isNightTi
 }
 
 function BoardCell({
+  cellIndex,
   cell,
   onClick,
   isExplosion,
@@ -923,7 +933,11 @@ function BoardCell({
 
   if (fogged) {
     return (
-      <div className="board-cell fogged-cell" onClick={onClick}>
+      <div
+        className="board-cell fogged-cell"
+        data-cell-index={cellIndex}
+        onClick={onClick}
+      >
         <div className="fog-overlay">🌫️</div>
       </div>
     )
@@ -954,6 +968,7 @@ function BoardCell({
     return (
       <div
         className={cellClass}
+        data-cell-index={cellIndex}
         style={{
           '--ship-color': showTrue ? shipType.color : '#ffd700',
           borderColor: showTrue ? shipType.color + '88' : '#ffd70088',
@@ -980,7 +995,11 @@ function BoardCell({
   if (cannonballTarget) cellClass += ' cannonball-target'
 
   return (
-    <div className={cellClass} onClick={gameEnded ? undefined : onClick}>
+    <div
+      className={cellClass}
+      data-cell-index={cellIndex}
+      onClick={gameEnded ? undefined : onClick}
+    >
       {sonarHint && (
         <div className="sonar-hint-overlay">
           <img

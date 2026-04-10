@@ -66,8 +66,8 @@ export const SHIP_TYPES = {
   },
 }
 
-const ROWS = 6
-const COLS = 8
+const ROWS = 7
+const COLS = 10
 export const TOTAL_CELLS = ROWS * COLS
 
 function rand(min, max) {
@@ -258,7 +258,7 @@ export function getAdjacentCells(index, cols = COLS, rows = ROWS) {
 export function getDealerComment(greedLevel, event, extra = {}) {
   // Cashout reactions based on how far the player got
   if (event === 'cashout') {
-    const { revealedCount = 0, totalCells = 24 } = extra
+    const { revealedCount = 0, totalCells = TOTAL_CELLS } = extra
     const pct = revealedCount / totalCells
     if (pct < 0.2) return "Wise. The sea respects the cautious."
     if (pct < 0.4) return "Not bad. But you left treasure behind."

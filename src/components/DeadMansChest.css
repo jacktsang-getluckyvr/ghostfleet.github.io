@@ -1,6 +1,6 @@
 .dmc-panel {
-  width: 400px;
-  max-width: 90vw;
+  width: min(520px, 94vw);
+  max-width: 94vw;
   background: linear-gradient(180deg, #0a1538, #060a1a);
   border: 2px solid var(--accent-gold);
   border-radius: 16px;
@@ -40,9 +40,12 @@
 
 .dmc-board {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 5px;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  gap: 4px;
   margin-bottom: 16px;
+  max-height: min(52vh, 420px);
+  aspect-ratio: 10 / 7;
 }
 
 .dmc-cell {
