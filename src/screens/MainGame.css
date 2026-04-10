@@ -211,9 +211,9 @@
   /* Fixed layout width: image + overlay share one box (source art 1536×1024) */
   --board-display-width: min(960px, 100%);
   /* Painted playfield is 10×7 (see GhostFleet_Gameplay_NoHead.png). Tune --grid-* only. */
-  --grid-inset-top: 20.5%;
-  --grid-width-pct: 65%;
-  --grid-nudge-x: 3.5%;
+  --grid-inset-top: 17.5%;
+  --grid-width-pct: 54%;
+  --grid-nudge-x: -3.25%;
   position: relative;
   flex: 0 0 auto;
   width: var(--board-display-width);
