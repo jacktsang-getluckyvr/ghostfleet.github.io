@@ -216,8 +216,8 @@
   --grid-nudge-x: -1.40%;
   --grid-row-offset: 1;
   /* SONAR art button over painted bonuses (same shell as bg image) */
-  --sonar-btn-top: 27%;
-  --sonar-btn-right: 1.2%;
+  --sonar-btn-top: 23%;
+  --sonar-btn-right: 1.0%;
   --sonar-btn-width: 24%;
   /* Chest: same horizontal box as Sonar (--sonar-btn-*); only vertical offset */
   --chest-btn-top: 50%;
