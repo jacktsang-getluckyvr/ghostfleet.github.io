@@ -213,7 +213,7 @@
   /* Painted playfield is 10×7 (see GhostFleet_Gameplay_NoHead.png). Tune --grid-* only. */
   --grid-inset-top: 17.5%;
   --grid-width-pct: 54%;
-  --grid-nudge-x: -2.65%;
+  --grid-nudge-x: -2.25%;
   --grid-row-offset: 1;
   position: relative;
   flex: 0 0 auto;
