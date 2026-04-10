@@ -237,10 +237,8 @@
   position: absolute;
   left: calc(50% + var(--grid-nudge-x));
   top: var(--grid-inset-top);
-  transform: translate(
-    -50%,
-    calc(100% / 7 * var(--grid-row-offset, 0))
-  );
+  margin-top: calc(var(--grid-row-offset, 0) * var(--grid-width-pct) / 10);
+  transform: translateX(-50%);
   width: var(--grid-width-pct);
   aspect-ratio: 10 / 7;
   max-width: calc(100% - 12%);
