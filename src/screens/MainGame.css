@@ -219,6 +219,9 @@
   --sonar-btn-top: 27%;
   --sonar-btn-right: 1.2%;
   --sonar-btn-width: 24%;
+  --chest-btn-top: 42%;
+  --chest-btn-right: 1.2%;
+  --chest-btn-width: 24%;
   position: relative;
   flex: 0 0 auto;
   width: var(--board-display-width);
@@ -697,6 +700,46 @@
   border-color: rgba(240, 192, 64, 0.35);
 }
 
+.bonus-card.chest-card--art {
+  display: block;
+  padding: 0;
+  min-height: 120px;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+  border: none;
+  border-radius: 12px;
+  background:
+    transparent
+    url('/dead-mans-chest-button.png')
+    center / contain no-repeat;
+  box-shadow: 0 0 14px rgba(120, 80, 20, 0.35);
+  backdrop-filter: none;
+}
+
+.bonus-card.chest-card--art:hover:not(:disabled) {
+  filter: brightness(1.06);
+  box-shadow: 0 0 18px rgba(240, 192, 64, 0.4);
+  transform: translateY(-2px);
+}
+
+.bonus-card.chest-card--art:focus-visible {
+  outline: 2px solid var(--accent-gold-bright);
+  outline-offset: 2px;
+}
+
+.bonus-card.chest-card--art.chest-card--on-board {
+  position: absolute;
+  z-index: 5;
+  top: var(--chest-btn-top);
+  right: var(--chest-btn-right);
+  left: auto;
+  width: var(--chest-btn-width);
+  max-width: min(200px, 34%);
+  margin: 0;
+}
+
 .quit-game-btn {
   display: flex;
   align-items: center;
@@ -932,7 +975,8 @@
     padding: 10px 8px;
   }
 
-  .bonus-card.sonar-card--art {
+  .bonus-card.sonar-card--art,
+  .bonus-card.chest-card--art {
     padding: 0;
   }
 
@@ -1063,7 +1107,8 @@
     padding: 6px 4px;
   }
 
-  .bonus-card.sonar-card--art {
+  .bonus-card.sonar-card--art,
+  .bonus-card.chest-card--art {
     padding: 0;
     min-height: 88px;
   }
@@ -1072,9 +1117,13 @@
     --sonar-btn-top: 22%;
     --sonar-btn-right: 0.4%;
     --sonar-btn-width: 30%;
+    --chest-btn-top: 38%;
+    --chest-btn-right: 0.4%;
+    --chest-btn-width: 30%;
   }
 
-  .bonus-card.sonar-card--art.sonar-card--on-board {
+  .bonus-card.sonar-card--art.sonar-card--on-board,
+  .bonus-card.chest-card--art.chest-card--on-board {
     max-width: min(160px, 38%);
   }
 

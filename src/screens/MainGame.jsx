@@ -804,6 +804,19 @@ export default function MainGame({ bet, onGameOver, onCashOut, onExit, isNightTi
               disabled={sonarUsed || gameEnded}
               aria-label="Sonar — ping nearby cells to reveal hints. Cost: 5% of bet."
             />
+
+            <button
+              type="button"
+              className={`bonus-card chest-card chest-card--art chest-card--on-board ${deadMansChestCell !== null ? 'used' : ''}`}
+              onClick={() => {
+                if (deadMansChestCell === null && !gameEnded) {
+                  playSFX('buttonClick')
+                  setShowDeadMansChest(true)
+                }
+              }}
+              disabled={deadMansChestCell !== null || gameEnded}
+              aria-label="Dead Man's Chest — choose any cell on the board. Cost: twenty times bet."
+            />
           </div>
         </div>
 
@@ -864,26 +877,6 @@ export default function MainGame({ bet, onGameOver, onCashOut, onExit, isNightTi
             <span className="info-btn-sub">Learn the new sea odds</span>
           </div>
         </button>
-
-        <div className="bonuses-panel">
-          <div className="bonuses-title">BONUSES</div>
-
-          <button
-            className={`bonus-card chest-card ${deadMansChestCell !== null ? 'used' : ''}`}
-            onClick={() => {
-              if (deadMansChestCell === null && !gameEnded) {
-                playSFX('buttonClick')
-                setShowDeadMansChest(true)
-              }
-            }}
-            disabled={deadMansChestCell !== null || gameEnded}
-          >
-            <div className="bonus-icon">📦</div>
-            <div className="bonus-name">DEAD MAN'S CHEST</div>
-            <div className="bonus-desc">Choose any cell on the board</div>
-            <div className="bonus-cost">Cost: x20 Bet</div>
-          </button>
-        </div>
 
         <button
           className="quit-game-btn"
