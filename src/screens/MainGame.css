@@ -215,6 +215,10 @@
   --grid-width-pct: 54%;
   --grid-nudge-x: -1.40%;
   --grid-row-offset: 1;
+  /* SONAR art button over painted bonuses (same shell as bg image) */
+  --sonar-btn-top: 23%;
+  --sonar-btn-right: 2.5%;
+  --sonar-btn-width: 24%;
   position: relative;
   flex: 0 0 auto;
   width: var(--board-display-width);
@@ -235,6 +239,7 @@
 /* Centers the hit grid on the art; keeps shake animation off the centering transform */
 .game-board-aligner {
   position: absolute;
+  z-index: 4;
   left: calc(50% + var(--grid-nudge-x));
   top: var(--grid-inset-top);
   margin-top: calc(var(--grid-row-offset, 0) * var(--grid-width-pct) / 10);
@@ -677,6 +682,17 @@
   outline-offset: 2px;
 }
 
+.bonus-card.sonar-card--art.sonar-card--on-board {
+  position: absolute;
+  z-index: 5;
+  top: var(--sonar-btn-top);
+  right: var(--sonar-btn-right);
+  left: auto;
+  width: var(--sonar-btn-width);
+  max-width: min(200px, 34%);
+  margin: 0;
+}
+
 .chest-card {
   border-color: rgba(240, 192, 64, 0.35);
 }
@@ -1050,6 +1066,16 @@
   .bonus-card.sonar-card--art {
     padding: 0;
     min-height: 88px;
+  }
+
+  .game-board-shell {
+    --sonar-btn-top: 20%;
+    --sonar-btn-right: 1%;
+    --sonar-btn-width: 30%;
+  }
+
+  .bonus-card.sonar-card--art.sonar-card--on-board {
+    max-width: min(160px, 38%);
   }
 
   .bonus-icon {

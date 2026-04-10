@@ -796,6 +796,14 @@ export default function MainGame({ bet, onGameOver, onCashOut, onExit, isNightTi
                 ))}
               </div>
             </div>
+
+            <button
+              type="button"
+              className={`bonus-card sonar-card sonar-card--art sonar-card--on-board ${sonarUsed ? 'used' : ''}`}
+              onClick={handleSonar}
+              disabled={sonarUsed || gameEnded}
+              aria-label="Sonar — ping nearby cells to reveal hints. Cost: 5% of bet."
+            />
           </div>
         </div>
 
@@ -859,14 +867,6 @@ export default function MainGame({ bet, onGameOver, onCashOut, onExit, isNightTi
 
         <div className="bonuses-panel">
           <div className="bonuses-title">BONUSES</div>
-
-          <button
-            type="button"
-            className={`bonus-card sonar-card sonar-card--art ${sonarUsed ? 'used' : ''}`}
-            onClick={handleSonar}
-            disabled={sonarUsed || gameEnded}
-            aria-label="Sonar — ping nearby cells to reveal hints. Cost: 5% of bet."
-          />
 
           <button
             className={`bonus-card chest-card ${deadMansChestCell !== null ? 'used' : ''}`}
