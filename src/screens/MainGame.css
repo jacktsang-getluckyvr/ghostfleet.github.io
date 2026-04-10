@@ -210,10 +210,10 @@
 .game-board-shell {
   /* Fixed layout width: image + overlay share one box (source art 1536×1024) */
   --board-display-width: min(960px, 100%);
-  /* Painted board is 10×10 (square). Tweak --grid-* to align overlay to the art. */
-  --grid-inset-top: 14.25%;
-  --grid-width-pct: 47.5%;
-  --grid-nudge-x: 2.25%;
+  /* Painted playfield is 10×7 (see GhostFleet_Gameplay_NoHead.png). Tune --grid-* only. */
+  --grid-inset-top: 23.5%;
+  --grid-width-pct: 45%;
+  --grid-nudge-x: -1.25%;
   position: relative;
   flex: 0 0 auto;
   width: var(--board-display-width);
@@ -238,7 +238,7 @@
   top: var(--grid-inset-top);
   transform: translateX(-50%);
   width: var(--grid-width-pct);
-  aspect-ratio: 1;
+  aspect-ratio: 10 / 7;
   max-width: calc(100% - 12%);
   box-sizing: border-box;
 }
@@ -248,7 +248,7 @@
   inset: 0;
   display: grid;
   grid-template-columns: repeat(10, minmax(0, 1fr));
-  grid-template-rows: repeat(10, minmax(0, 1fr));
+  grid-template-rows: repeat(7, minmax(0, 1fr));
   gap: 0;
   padding: 0;
   margin: 0;

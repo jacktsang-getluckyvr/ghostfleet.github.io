@@ -66,7 +66,7 @@ export const SHIP_TYPES = {
   },
 }
 
-const ROWS = 10
+const ROWS = 7
 const COLS = 10
 export const TOTAL_CELLS = ROWS * COLS
 
