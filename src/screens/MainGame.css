@@ -1119,7 +1119,7 @@
   }
 
   .game-board-shell {
-    --sonar-btn-top: 22%;
+    --sonar-btn-top: 25%;
     --sonar-btn-right: 0.4%;
     --sonar-btn-width: 30%;
     --chest-btn-top: 42%;
