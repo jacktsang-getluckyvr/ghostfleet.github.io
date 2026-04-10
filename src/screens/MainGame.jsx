@@ -772,25 +772,29 @@ export default function MainGame({ bet, onGameOver, onCashOut, onExit, isNightTi
               alt=""
               draggable={false}
             />
-            <div
-              ref={boardRef}
-              className={`game-board ${shakeBoard ? 'board-shake' : ''} ${chaosAnim ? 'board-chaos' : ''}`}
-            >
-          {sonarWave && <div className="sonar-wave-overlay" />}
-          {board.cells.map((cell, idx) => (
-            <BoardCell
-              key={idx}
-              cellIndex={idx}
-              cell={cell}
-              onClick={() => revealCell(idx)}
-              isExplosion={explosionCells.includes(idx)}
-              isFogTarget={fogCells.includes(idx)}
-              gameEnded={gameEnded}
-              omenVisible={omenVisible}
-              safeGlow={safeGlowCell === idx}
-              cannonballTarget={cannonballAnim && cannonballTarget === idx}
-            />
-          ))}
+            <div className="game-board-aligner">
+              <div
+                ref={boardRef}
+                className={`game-board ${shakeBoard ? 'board-shake' : ''} ${chaosAnim ? 'board-chaos' : ''}`}
+              >
+                {sonarWave && <div className="sonar-wave-overlay" />}
+                {board.cells.map((cell, idx) => (
+                  <BoardCell
+                    key={idx}
+                    cellIndex={idx}
+                    cell={cell}
+                    onClick={() => revealCell(idx)}
+                    isExplosion={explosionCells.includes(idx)}
+                    isFogTarget={fogCells.includes(idx)}
+                    gameEnded={gameEnded}
+                    omenVisible={omenVisible}
+                    safeGlow={safeGlowCell === idx}
+                    cannonballTarget={
+                      cannonballAnim && cannonballTarget === idx
+                    }
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
