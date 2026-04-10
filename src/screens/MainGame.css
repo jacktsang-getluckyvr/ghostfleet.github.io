@@ -216,8 +216,8 @@
   --grid-nudge-x: -1.40%;
   --grid-row-offset: 1;
   /* SONAR art button over painted bonuses (same shell as bg image) */
-  --sonar-btn-top: 23%;
-  --sonar-btn-right: 2.5%;
+  --sonar-btn-top: 25%;
+  --sonar-btn-right: 1.4%;
   --sonar-btn-width: 24%;
   position: relative;
   flex: 0 0 auto;
@@ -1069,8 +1069,8 @@
   }
 
   .game-board-shell {
-    --sonar-btn-top: 20%;
-    --sonar-btn-right: 1%;
+    --sonar-btn-top: 22%;
+    --sonar-btn-right: 0.4%;
     --sonar-btn-width: 30%;
   }
 
