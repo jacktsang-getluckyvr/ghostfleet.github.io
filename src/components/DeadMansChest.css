@@ -1,6 +1,6 @@
 .dmc-panel {
-  width: min(520px, 94vw);
-  max-width: 94vw;
+  width: min(560px, 96vw);
+  max-width: 96vw;
   background: linear-gradient(180deg, #0a1538, #060a1a);
   border: 2px solid var(--accent-gold);
   border-radius: 16px;
@@ -41,11 +41,11 @@
 .dmc-board {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(7, 1fr);
-  gap: 4px;
+  grid-template-rows: repeat(10, 1fr);
+  gap: 3px;
   margin-bottom: 16px;
-  max-height: min(52vh, 420px);
-  aspect-ratio: 10 / 7;
+  max-height: min(56vh, 480px);
+  aspect-ratio: 1;
 }
 
 .dmc-cell {
