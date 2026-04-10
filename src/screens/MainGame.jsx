@@ -796,50 +796,48 @@ export default function MainGame({ bet, onGameOver, onCashOut, onExit, isNightTi
                 ))}
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Bottom Panel */}
-        <div className="bottom-panel">
-          <div className="panel-stat">
-            <div className="panel-stat-label">BET</div>
-            <div className="panel-stat-value">${bet.toFixed(2)}</div>
-          </div>
-          <div className="panel-stat">
-            <div className="panel-stat-label">WIN</div>
-            <div className="panel-stat-value win-value">
-              ${Math.max(0, currentWin).toFixed(2)}
-            </div>
-          </div>
-          <div
-            className={`multiplier-display ${multiplierPulse ? 'mult-pulse' : ''}`}
-          >
-            <span>x{multiplier.toFixed(1)}</span>
-          </div>
-
-          {/* Cash Out with Double or Nothing */}
-          {!showDoubleOrNothing ? (
-            <button
-              className="cashout-btn"
-              onClick={handleCashOut}
-              disabled={gameEnded || revealedCount === 0}
-            >
-              <div className="cashout-text">CASH OUT</div>
-              <div className="cashout-amount">
-                Collect ${Math.max(0, currentWin).toFixed(2)}
+            <div className="bottom-panel bottom-panel--on-board">
+              <div className="panel-stat">
+                <div className="panel-stat-label">BET</div>
+                <div className="panel-stat-value">${bet.toFixed(2)}</div>
               </div>
-            </button>
-          ) : (
-            <div className="double-or-nothing">
-              <button className="don-confirm" onClick={handleConfirmCashOut}>
-                CONFIRM
-              </button>
-              <button className="don-double" onClick={handleDoubleOrNothing}>
-                2x OR 💀
-              </button>
-              <div className="don-timer" />
+              <div className="panel-stat">
+                <div className="panel-stat-label">WIN</div>
+                <div className="panel-stat-value win-value">
+                  ${Math.max(0, currentWin).toFixed(2)}
+                </div>
+              </div>
+              <div
+                className={`multiplier-display ${multiplierPulse ? 'mult-pulse' : ''}`}
+              >
+                <span>x{multiplier.toFixed(1)}</span>
+              </div>
+
+              {!showDoubleOrNothing ? (
+                <button
+                  className="cashout-btn"
+                  onClick={handleCashOut}
+                  disabled={gameEnded || revealedCount === 0}
+                >
+                  <div className="cashout-text">CASH OUT</div>
+                  <div className="cashout-amount">
+                    COLLECT ${Math.max(0, currentWin).toFixed(2)}
+                  </div>
+                </button>
+              ) : (
+                <div className="double-or-nothing">
+                  <button className="don-confirm" onClick={handleConfirmCashOut}>
+                    CONFIRM
+                  </button>
+                  <button className="don-double" onClick={handleDoubleOrNothing}>
+                    2x OR 💀
+                  </button>
+                  <div className="don-timer" />
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
 
