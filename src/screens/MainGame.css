@@ -220,7 +220,7 @@
   --sonar-btn-right: 1.2%;
   --sonar-btn-width: 24%;
   /* Chest: same horizontal box as Sonar (--sonar-btn-*); only vertical offset */
-  --chest-btn-top: 46%;
+  --chest-btn-top: 50%;
   position: relative;
   flex: 0 0 auto;
   width: var(--board-display-width);
