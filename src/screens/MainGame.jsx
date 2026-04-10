@@ -764,17 +764,18 @@ export default function MainGame({ bet, onGameOver, onCashOut, onExit, isNightTi
           </span>
         </div>
 
-        <div className="game-board-shell">
-          <img
-            className="game-board-bg-img"
-            src="/GhostFleet_Gameplay_NoHead.png"
-            alt=""
-            draggable={false}
-          />
-          <div
-            ref={boardRef}
-            className={`game-board ${shakeBoard ? 'board-shake' : ''} ${chaosAnim ? 'board-chaos' : ''}`}
-          >
+        <div className="game-board-area">
+          <div className="game-board-shell">
+            <img
+              className="game-board-bg-img"
+              src="/GhostFleet_Gameplay_NoHead.png"
+              alt=""
+              draggable={false}
+            />
+            <div
+              ref={boardRef}
+              className={`game-board ${shakeBoard ? 'board-shake' : ''} ${chaosAnim ? 'board-chaos' : ''}`}
+            >
           {sonarWave && <div className="sonar-wave-overlay" />}
           {board.cells.map((cell, idx) => (
             <BoardCell
@@ -790,6 +791,7 @@ export default function MainGame({ bet, onGameOver, onCashOut, onExit, isNightTi
               cannonballTarget={cannonballAnim && cannonballTarget === idx}
             />
           ))}
+            </div>
           </div>
         </div>
 

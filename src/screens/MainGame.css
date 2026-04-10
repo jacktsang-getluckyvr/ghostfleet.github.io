@@ -6,7 +6,8 @@
   height: 100%;
   padding: 6px 10px;
   gap: 10px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   background-color: #020510;
 }
 
@@ -146,7 +147,8 @@
   gap: 6px;
   min-width: 0;
   min-height: 0;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .game-logo-small {
@@ -194,28 +196,35 @@
   text-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
 }
 
-/* Board art + aligned play grid (GhostFleet_Gameplay_NoHead.png) */
-.game-board-shell {
-  --grid-inset-left: 17.2%;
-  --grid-inset-right: 16.8%;
-  --grid-inset-top: 33%;
-  --grid-inset-bottom: 29%;
-  position: relative;
+/* Board art + aligned play grid (GhostFleet_Gameplay_NoHead.png, native 1536×1024) */
+.game-board-area {
   flex: 1;
   min-height: 0;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: auto;
+}
+
+.game-board-shell {
+  /* Fixed layout width: image + overlay share one box (source art 1536×1024) */
+  --board-display-width: 960px;
+  --grid-inset-left: 17.2%;
+  --grid-inset-right: 16.8%;
+  --grid-inset-top: 33%;
+  --grid-inset-bottom: 29%;
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--board-display-width);
+  max-width: none;
+  box-sizing: border-box;
 }
 
 .game-board-bg-img {
   display: block;
   width: 100%;
-  max-height: min(68vh, calc(100vh - 168px));
   height: auto;
-  object-fit: contain;
-  object-position: center top;
   pointer-events: none;
   user-select: none;
   /* Hide painted header/footer chrome; interactive UI stays in React */
@@ -904,8 +913,8 @@
   }
 
   .game-board {
-    gap: 2px;
-    padding: 4px;
+    gap: 1px;
+    padding: 0;
   }
 
   .game-logo-small {
