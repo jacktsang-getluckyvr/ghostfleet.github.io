@@ -691,7 +691,7 @@
   right: var(--sonar-btn-right);
   left: auto;
   width: var(--sonar-btn-width);
-  max-width: min(200px, 34%);
+  max-width: min(190px, 34%);
   margin: 0;
 }
 
